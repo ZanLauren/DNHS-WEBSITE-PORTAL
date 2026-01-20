@@ -104,26 +104,30 @@
             const loader = document.getElementById('loading-screen');
             const content = document.getElementById('main-content');
 
-            // Hintayin ang hash processing ng Supabase
-            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            // Timeout para bigyan ng oras ang Supabase na i-process ang hash link
+            setTimeout(async () => {
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
 
-            if (session) {
-                loader.classList.add('hidden');
-                content.classList.remove('hidden');
-            } else {
-                // Kung walang session, i-check kung galing sa email link (may access_token sa URL)
-                if (window.location.hash.includes('access_token')) {
+                if (session) {
                     loader.classList.add('hidden');
                     content.classList.remove('hidden');
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Access Denied',
-                        text: 'Invalid or expired recovery link. Please request a new one.',
-                        background: '#0b1120', color: '#fff'
-                    }).then(() => { window.location.href = 'index.html'; });
+                    // Check kung galing sa recovery flow ang URL
+                    const isRecovery = window.location.hash.includes('access_token') || window.location.href.includes('type=recovery');
+                    
+                    if (isRecovery) {
+                        loader.classList.add('hidden');
+                        content.classList.remove('hidden');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Access Denied',
+                            text: 'Invalid or expired recovery link. Please request a new one.',
+                            background: '#0b1120', color: '#fff'
+                        }).then(() => { window.location.href = 'index.html'; });
+                    }
                 }
-            }
+            }, 600);
         };
 
         function evaluateStrength(password) {
@@ -174,13 +178,17 @@
             const newPassword = document.getElementById('newPass').value;
             const confirmPassword = document.getElementById('confirmPass').value;
 
+            if (newPassword.length < 6) {
+                return Swal.fire({ icon: 'warning', title: 'Security Alert', text: 'Password must be at least 6 characters.', background: '#0b1120', color: '#fff' });
+            }
+
             if (newPassword !== confirmPassword) {
                 return Swal.fire({ icon: 'error', title: 'Mismatch', text: 'Passwords do not match!', background: '#0b1120', color: '#fff' });
             }
 
             Swal.fire({ 
                 title: 'Updating Security...', 
-                text: 'Please wait...',
+                text: 'Reconfiguring terminal access...',
                 background: '#0b1120', color: '#fff',
                 allowOutsideClick: false,
                 didOpen: () => Swal.showLoading() 
@@ -191,11 +199,12 @@
             if (error) {
                 Swal.fire({ icon: 'error', title: 'Update Failed', text: error.message, background: '#0b1120', color: '#fff' });
             } else {
+                // Mahalaga: Sign out muna para ma-clear ang old session bago mag-login ulit
                 await supabaseClient.auth.signOut();
                 Swal.fire({
                     icon: 'success',
                     title: 'Access Restored',
-                    text: 'Success! Please log in with your new password.',
+                    text: 'Success! Use your new password to log in.',
                     background: '#0b1120', color: '#fff'
                 }).then(() => { window.location.href = 'index.html'; });
             }
