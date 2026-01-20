@@ -21,7 +21,7 @@
             overflow-x: hidden;
         }
 
-        /* SMOOTH ROTATION PERFORMANCE FIX */
+        /* PERFORMANCE FIX: Hardware Accelerated RGB */
         @keyframes rotateRGB { 
             from { transform: rotate(0deg) translateZ(0); } 
             to { transform: rotate(360deg) translateZ(0); } 
@@ -36,7 +36,7 @@
             overflow: hidden; 
             z-index: 1; 
             width: 95%; 
-            max-width: 650px; /* Mas pinalapad mula 480px papuntang 550px */
+            max-width: 650px; /* Malapad na design */
             will-change: transform;
         }
         
@@ -79,7 +79,6 @@
         .btn-cyber { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); transition: all 0.4s; }
         .btn-cyber:hover { box-shadow: 0 0 40px rgba(79, 70, 229, 0.6); transform: translateY(-2px); }
         
-        /* Input Glowing Effect */
         .input-glow:focus { 
             border-color: #6366f1; 
             background: rgba(99, 102, 241, 0.05); 
@@ -96,7 +95,8 @@
     <audio id="hoverSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 
     <div class="rgb-container shadow-[0_0_60px_rgba(0,0,0,0.7)]">
-        <div class="glass-inner p-10 md:p-16 text-center"> <div class="flex flex-col items-center mb-10 md:mb-12">
+        <div class="glass-inner p-10 md:p-16 text-center"> 
+            <div class="flex flex-col items-center mb-10 md:mb-12">
                 <div class="logo-float">
                     <div class="logo-rgb-frame shadow-[0_0_35px_rgba(79,70,229,0.5)]">
                         <div class="logo-inner">
@@ -105,7 +105,7 @@
                     </div>
                 </div>
                 <h2 class="mt-8 text-3xl md:text-5xl font-black text-white uppercase tracking-tighter italic">DNHS <span class="text-indigo-500">PORTAL</span></h2>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.5em] mt-2">WEBSITE</p>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.5em] mt-2">OFFICIAL TERMINAL</p>
             </div>
 
             <form id="loginForm" class="space-y-6 md:space-y-7 text-left">
@@ -151,9 +151,15 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const ADMIN_EMAIL = 'maricris.arenas1017@gmail.com';
 
+        // --- PASSWORD RECOVERY REDIRECT LOGIC ---
         window.onload = () => {
+            // Nakikinig sa auth events
             supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (event === "PASSWORD_RECOVERY") { window.location.href = 'update-password.html'; }
+                if (event === "PASSWORD_RECOVERY") {
+                    console.log("Password recovery link detected. Redirecting...");
+                    // Siguraduhin na 'update-password.html' ang filename mo
+                    window.location.href = 'update-password.html'; 
+                }
             });
         };
 
