@@ -19,85 +19,82 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden; 
+            overflow-x: hidden;
         }
 
-        /* Pre-loader CSS */
-        #preloader {
-            position: fixed;
-            inset: 0;
-            background: #020617;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s ease-out, visibility 0.8s;
+        @keyframes rotateRGB { 
+            from { transform: rotate(0deg) translateZ(0); } 
+            to { transform: rotate(360deg) translateZ(0); } 
         }
-
-        .loader-ring {
-            width: 80px;
-            height: 80px;
-            border: 2px solid transparent;
-            border-top: 2px solid #6366f1;
-            border-right: 2px solid #a855f7;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes rotateRGB { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes floating { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 
         .rgb-container { 
-            position: relative; padding: 4px; border-radius: 3rem; background: #0b1120; 
-            overflow: hidden; z-index: 1; width: 95%; max-width: 650px;
+            position: relative; 
+            padding: 4px; 
+            border-radius: 3rem; 
+            background: #0b1120; 
+            overflow: hidden; 
+            z-index: 1; 
+            width: 95%; 
+            max-width: 650px;
+            will-change: transform;
         }
         
         .rgb-container::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: conic-gradient(#4f46e5, #06b6d4, #10b981, #f59e0b, #ef4444, #ec4899, #4f46e5);
-            animation: rotateRGB 7s linear infinite; z-index: -2;
+            animation: rotateRGB 7s linear infinite; 
+            z-index: -2;
+            will-change: transform;
         }
-        .rgb-container::after { content: ''; position: absolute; inset: 4px; background: #0b1120; border-radius: 2.8rem; z-index: -1; }
+        .rgb-container::after { 
+            content: ''; position: absolute; inset: 4px; 
+            background: #0b1120; border-radius: 2.8rem; z-index: -1; 
+        }
 
         .logo-rgb-frame {
             position: relative; width: 120px; height: 120px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            display: flex; align-items: center; justify-content: center; overflow: hidden; z-index: 1;
         }
+        @media (min-width: 768px) {
+            .logo-rgb-frame { width: 150px; height: 150px; }
+            .rgb-container { border-radius: 4rem; }
+            .rgb-container::after { border-radius: 3.8rem; }
+        }
+        
         .logo-rgb-frame::before {
             content: ''; position: absolute; width: 180%; height: 180%;
             background: conic-gradient(#ec4899, #4f46e5, #06b6d4, #10b981, #f59e0b, #ec4899);
-            animation: rotateRGB 4s linear infinite; z-index: -1;
+            animation: rotateRGB 4s linear infinite; 
+            z-index: -1;
+            will-change: transform;
         }
-        .logo-inner { position: relative; width: 92%; height: 92%; background: #0b1120; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .logo-inner {
+            position: relative; width: 92%; height: 92%; background: #0b1120; 
+            border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
         .logo-inner img { width: 100%; height: 100%; object-fit: cover; }
         .logo-float { animation: floating 4s ease-in-out infinite; }
 
         .btn-cyber { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); transition: all 0.4s; }
         .btn-cyber:hover { box-shadow: 0 0 40px rgba(79, 70, 229, 0.6); transform: translateY(-2px); }
-        .input-glow:focus { border-color: #6366f1; background: rgba(99, 102, 241, 0.05); box-shadow: 0 0 25px rgba(99, 102, 241, 0.15); }
-        .glass-inner { background: rgba(11, 17, 32, 0.92); backdrop-filter: blur(15px); border-radius: 2.8rem; }
         
-        @media (min-width: 768px) {
-            .logo-rgb-frame { width: 150px; height: 150px; }
-            .rgb-container { border-radius: 4rem; }
-            .rgb-container::after { border-radius: 3.8rem; }
-            .glass-inner { border-radius: 3.8rem; }
+        .input-glow:focus { 
+            border-color: #6366f1; 
+            background: rgba(99, 102, 241, 0.05); 
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.15); 
         }
+        
+        .glass-inner { background: rgba(11, 17, 32, 0.92); backdrop-filter: blur(15px); border-radius: 2.8rem; }
+        @media (min-width: 768px) { .glass-inner { border-radius: 3.8rem; } }
     </style>
 </head>
 <body class="p-4 md:p-10 antialiased text-slate-200">
 
-    <div id="preloader">
-        <div class="loader-ring mb-4"></div>
-        <p class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.5em] animate-pulse">Initializing System...</p>
-    </div>
-
     <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
     <audio id="hoverSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 
-    <div class="rgb-container shadow-[0_0_60px_rgba(0,0,0,0.7)]" id="mainContent" style="opacity: 0; transform: translateY(20px); transition: all 1s ease-out;">
+    <div class="rgb-container shadow-[0_0_60px_rgba(0,0,0,0.7)]">
         <div class="glass-inner p-10 md:p-16 text-center"> 
             <div class="flex flex-col items-center mb-10 md:mb-12">
                 <div class="logo-float">
@@ -133,54 +130,60 @@
                 </button>
             </form>
 
-            <div class="mt-8 flex flex-col items-center w-full">
-                <div class="relative w-full group overflow-hidden rounded-[2.5rem] transition-all duration-300 hover:scale-[1.02] active:scale-95" onmouseenter="playHover()">
-                    <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-700 opacity-100 group-hover:shadow-[0_0_40px_rgba(79,70,229,0.6)] transition-all"></div>
-                    
-                    <div class="relative flex items-center justify-center gap-4 py-6 px-4 pointer-events-none">
-                        <i class="fab fa-google text-white text-lg"></i>
-                        <span class="text-white font-black uppercase tracking-widest text-xs">Sign in with Google</span>
-                    </div>
+            <div class="mt-10 flex flex-col items-center">
+                <p class="text-[9px] font-black text-slate-600 uppercase tracking-[0.4em] mb-4">Fast Access via Satellite</p>
+                <div id="g_id_onload"
+                     data-client_id="771628772905-70l29m9qb018vlea1829ajqga9lc4qfu.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleCredentialResponse"
+                     data-auto_prompt="false">
+                </div>
 
-                    <div id="g_id_onload"
-                         data-client_id="771628772905-70l29m9qb018vlea1829ajqga9lc4qfu.apps.googleusercontent.com"
-                         data-context="signin"
-                         data-ux_mode="popup"
-                         data-callback="handleCredentialResponse"
-                         data-auto_prompt="false">
-                    </div>
-                    <div class="absolute inset-0 opacity-0 cursor-pointer z-10 scale-[5] origin-center">
-                        <div class="g_id_signin" data-type="standard" data-width="400"></div>
+                <div class="group relative p-[2px] rounded-full transition-all duration-300 hover:scale-105 active:scale-95" onmouseenter="playHover()">
+                    <div class="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    <div class="relative bg-[#0b1120] rounded-full overflow-hidden shadow-2xl border border-white/5">
+                        <div class="g_id_signin"
+                             data-type="standard"
+                             data-shape="pill"
+                             data-theme="filled_blue"
+                             data-text="signin_with"
+                             data-size="large"
+                             data-logo_alignment="left">
+                        </div>
                     </div>
                 </div>
-                <p class="text-[8px] font-black text-slate-600 uppercase tracking-[0.4em] mt-4">Encrypted Google Gateway</p>
             </div>
 
             <div class="mt-12 pt-8 border-t border-white/5 flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-slate-500">
                 <a href="register.html" onmouseenter="playHover()" class="hover:text-indigo-400 transition-all">Create Account</a>
                 <a href="forgot-pass.html" onmouseenter="playHover()" class="hover:text-indigo-400 transition-all">Forgot Password</a>
             </div>
+
+            <div class="mt-12 pt-10 border-t border-white/5 text-center">
+                <p class="text-[10px] font-black text-slate-600 uppercase tracking-[0.5em] mb-6">Stay Connected</p>
+                <a href="https://www.facebook.com/rixx.carti" target="_blank" onmouseenter="playHover()" class="inline-flex items-center gap-4 px-10 py-4 rounded-full bg-indigo-600/5 border border-indigo-600/20 text-indigo-400 hover:bg-indigo-600 hover:text-white transition-all duration-500 shadow-2xl group">
+                    <i class="fab fa-facebook-f text-sm group-hover:scale-125 transition-transform"></i>
+                    <span class="text-[11px] font-black uppercase tracking-[0.2em]">FOLLOW/MESSAGE THE DEVELOPER ON FACEBOOK</span>
+                </a>
+            </div>
         </div>
     </div>
 
     <script>
-        // Preloader Logic
-        window.addEventListener('load', () => {
-            const preloader = document.getElementById('preloader');
-            const mainContent = document.getElementById('mainContent');
-            setTimeout(() => {
-                preloader.style.opacity = '0';
-                preloader.style.visibility = 'hidden';
-                mainContent.style.opacity = '1';
-                mainContent.style.transform = 'translateY(0)';
-                document.body.style.overflow = 'auto';
-            }, 1500);
-        });
-
         const SUPABASE_URL = 'https://cwxpffwqpbedjffvpsbj.supabase.co'; 
         const SUPABASE_KEY = 'sb_publishable_s2yXIg3L24wd0XYbrtnmPQ_HH_IN_e7';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const ADMIN_EMAIL = 'maricris.arenas1017@gmail.com';
+
+        window.onload = () => {
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                if (event === "PASSWORD_RECOVERY") {
+                    window.location.href = 'update-password.html'; 
+                }
+            });
+        };
 
         const clickSound = document.getElementById('clickSound');
         const hoverSound = document.getElementById('hoverSound');
@@ -206,6 +209,7 @@
                 });
                 if (error) throw error;
                 
+                // Admin check for Google Login
                 const userEmail = data.user.email.toLowerCase();
                 const is_admin = userEmail === ADMIN_EMAIL.toLowerCase();
 
@@ -250,4 +254,4 @@
         };
     </script>
 </body>
-</html>
+    </html>
