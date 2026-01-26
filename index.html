@@ -21,7 +21,6 @@
             overflow-x: hidden;
         }
 
-        /* PERFORMANCE FIX: Hardware Accelerated RGB */
         @keyframes rotateRGB { 
             from { transform: rotate(0deg) translateZ(0); } 
             to { transform: rotate(360deg) translateZ(0); } 
@@ -36,7 +35,7 @@
             overflow: hidden; 
             z-index: 1; 
             width: 95%; 
-            max-width: 650px; /* design */
+            max-width: 650px;
             will-change: transform;
         }
         
@@ -151,13 +150,9 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const ADMIN_EMAIL = 'maricris.arenas1017@gmail.com';
 
-        // --- PASSWORD RECOVERY REDIRECT LOGIC ---
         window.onload = () => {
-            // Nakikinig sa auth events
             supabaseClient.auth.onAuthStateChange((event, session) => {
                 if (event === "PASSWORD_RECOVERY") {
-                    console.log("Password recovery link detected. Redirecting...");
-                    // Siguraduhin na 'update-password.html' ang filename mo
                     window.location.href = 'update-password.html'; 
                 }
             });
@@ -203,7 +198,6 @@
                 });
 
                 setTimeout(() => { window.location.href = is_admin ? 'admin.html' : 'student-dashboard.html'; }, 1500);
-
             } catch (err) {
                 Swal.fire({ icon: 'error', title: 'ACCESS DENIED', text: err.message, background: '#0b1120', color: '#fff' });
             }
