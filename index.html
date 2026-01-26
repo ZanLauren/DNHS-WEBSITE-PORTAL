@@ -6,6 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Login | DNHS PORTAL</title>
     <style>
@@ -129,6 +130,24 @@
                 </button>
             </form>
 
+            <div class="mt-8 flex flex-col items-center">
+                <div id="g_id_onload"
+                     data-client_id="771628772905-70l29m9qb018vlea1829ajqga9lc4qfu.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleCredentialResponse"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-shape="pill"
+                     data-theme="outline"
+                     data-text="signin_with"
+                     data-size="large"
+                     data-logo_alignment="left">
+                </div>
+            </div>
+
             <div class="mt-12 pt-8 border-t border-white/5 flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-slate-500">
                 <a href="register.html" onmouseenter="playHover()" class="hover:text-indigo-400 transition-all">Create Account</a>
                 <a href="forgot-pass.html" onmouseenter="playHover()" class="hover:text-indigo-400 transition-all">Forgot Password</a>
@@ -171,6 +190,20 @@
                 passField.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
                 passField.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // Logic para sa Google Login Response
+        async function handleCredentialResponse(response) {
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithIdToken({
+                    provider: 'google',
+                    token: response.credential,
+                });
+                if (error) throw error;
+                window.location.href = 'student-dashboard.html';
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'GOOGLE AUTH FAILED', text: err.message, background: '#0b1120', color: '#fff' });
             }
         }
 
