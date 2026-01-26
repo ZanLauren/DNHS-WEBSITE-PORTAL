@@ -19,7 +19,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden; /* Prevent scroll during loading */
+            overflow: hidden; 
         }
 
         /* Pre-loader CSS */
@@ -78,6 +78,13 @@
         .btn-cyber:hover { box-shadow: 0 0 40px rgba(79, 70, 229, 0.6); transform: translateY(-2px); }
         .input-glow:focus { border-color: #6366f1; background: rgba(99, 102, 241, 0.05); box-shadow: 0 0 25px rgba(99, 102, 241, 0.15); }
         .glass-inner { background: rgba(11, 17, 32, 0.92); backdrop-filter: blur(15px); border-radius: 2.8rem; }
+        
+        @media (min-width: 768px) {
+            .logo-rgb-frame { width: 150px; height: 150px; }
+            .rgb-container { border-radius: 4rem; }
+            .rgb-container::after { border-radius: 3.8rem; }
+            .glass-inner { border-radius: 3.8rem; }
+        }
     </style>
 </head>
 <body class="p-4 md:p-10 antialiased text-slate-200">
@@ -126,22 +133,27 @@
                 </button>
             </form>
 
-            <div class="mt-10 flex flex-col items-center">
-                <p class="text-[9px] font-black text-slate-600 uppercase tracking-[0.4em] mb-4">Fast Access</p>
-                <div id="g_id_onload"
-                     data-client_id="771628772905-70l29m9qb018vlea1829ajqga9lc4qfu.apps.googleusercontent.com"
-                     data-context="signin"
-                     data-ux_mode="popup"
-                     data-callback="handleCredentialResponse"
-                     data-auto_prompt="false">
-                </div>
+            <div class="mt-8 flex flex-col items-center w-full">
+                <div class="relative w-full group overflow-hidden rounded-[2.5rem] transition-all duration-300 hover:scale-[1.02] active:scale-95" onmouseenter="playHover()">
+                    <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-700 opacity-100 group-hover:shadow-[0_0_40px_rgba(79,70,229,0.6)] transition-all"></div>
+                    
+                    <div class="relative flex items-center justify-center gap-4 py-6 px-4 pointer-events-none">
+                        <i class="fab fa-google text-white text-lg"></i>
+                        <span class="text-white font-black uppercase tracking-widest text-xs">Sign in with Google</span>
+                    </div>
 
-                <div class="group relative p-[2px] rounded-full transition-all duration-300 hover:scale-105 active:scale-95" onmouseenter="playHover()">
-                    <div class="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative bg-[#0b1120] rounded-full overflow-hidden shadow-2xl border border-white/5">
-                        <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+                    <div id="g_id_onload"
+                         data-client_id="771628772905-70l29m9qb018vlea1829ajqga9lc4qfu.apps.googleusercontent.com"
+                         data-context="signin"
+                         data-ux_mode="popup"
+                         data-callback="handleCredentialResponse"
+                         data-auto_prompt="false">
+                    </div>
+                    <div class="absolute inset-0 opacity-0 cursor-pointer z-10 scale-[5] origin-center">
+                        <div class="g_id_signin" data-type="standard" data-width="400"></div>
                     </div>
                 </div>
+                <p class="text-[8px] font-black text-slate-600 uppercase tracking-[0.4em] mt-4">Encrypted Google Gateway</p>
             </div>
 
             <div class="mt-12 pt-8 border-t border-white/5 flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-slate-500">
@@ -156,14 +168,13 @@
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
             const mainContent = document.getElementById('mainContent');
-            
             setTimeout(() => {
                 preloader.style.opacity = '0';
                 preloader.style.visibility = 'hidden';
                 mainContent.style.opacity = '1';
                 mainContent.style.transform = 'translateY(0)';
                 document.body.style.overflow = 'auto';
-            }, 1500); // 1.5 seconds loading time
+            }, 1500);
         });
 
         const SUPABASE_URL = 'https://cwxpffwqpbedjffvpsbj.supabase.co'; 
