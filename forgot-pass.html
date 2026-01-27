@@ -121,7 +121,7 @@
             try {
                 // redirectTo must match exactly the URL in Supabase Dashboard Redirect URLs
                 const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-                    redirectTo: 'https://dnhs-website-portal.vercel.app/update-password.html',
+                    redirectTo: 'https://dnhs-web-portal.vercel.app/update-password.html',
                 });
 
                 if (error) throw error;
